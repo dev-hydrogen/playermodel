@@ -1,5 +1,6 @@
 # playermodel
 work-in-progress, intended to replace the client-side player model with a server-sided one that can have custom animations (walk cycles, idle animations) and emotes (dancing and stuff) 
+
 currently very bad
 
 
