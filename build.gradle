@@ -1,0 +1,53 @@
+plugins {
+    id "io.freefair.lombok" version "6.5.0.3"
+    id 'java'
+    id 'java-library'
+}
+
+group = 'exposed.hydrogen'
+version = '1.0.0'
+
+configurations {
+    provided
+}
+sourceSets {
+    main { compileClasspath += configurations.provided }
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+dependencies {
+    provided 'com.github.Minestom:Minestom:7867313290'
+    provided 'exposed.hydrogen.resources:Core:1.2.0'
+    provided 'com.github.WorldSeedGames:WorldSeedEntityEngine:v2.0.0'
+    implementation 'com.github.WorldSeedGames:WorldSeedEntityEngine:v2.0.0'
+}
+
+def targetJavaVersion = 17
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    from {
+        configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        options.release = targetJavaVersion
+    }
+}

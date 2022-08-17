@@ -1,0 +1,12 @@
+{
+  "entrypoint": "exposed.hydrogen.playermodel.Player_Model",
+  "name": "PlayerModels",
+  "version": "1.0.0",
+
+  "repositories": [
+    {"id": "mavencentral", "url": "https://repo.maven.apache.org/maven2/"}
+  ],
+  "dependencies": [
+      "Resources"
+  ]
+}
