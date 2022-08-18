@@ -35,12 +35,12 @@ public final class Player_Model extends Extension {
     @Getter private static Player_Model instance;
 
     @Override
-    public LoadStatus initialize() {
+    public void initialize() {
         instance = this;
-        this.dataDirectory().toFile().mkdirs();
-        BASE_PATH = getInstance().dataDirectory();
-        MODEL_PATH = getInstance().dataDirectory().resolve("models");
-        TEMP_PATH = getInstance().dataDirectory().resolve("temp");
+        this.getDataDirectory().toFile().mkdirs();
+        BASE_PATH = getInstance().getDataDirectory();
+        MODEL_PATH = getInstance().getDataDirectory().resolve("models");
+        TEMP_PATH = getInstance().getDataDirectory().resolve("temp");
         MinecraftServer.getGlobalEventHandler().addListener(PlayerSpawnEvent.class, event -> {
             Player player = event.getPlayer();
             PlayerMob mob = new PlayerMob(player.getInstance(), player.getPosition(), player);
@@ -90,9 +90,7 @@ public final class Player_Model extends Extension {
             Resources.getResourcePackHandler().addCustomResources(resources,true);
         } catch (SizeLimitExceededException | NoSuchAlgorithmException | IOException e) {
             e.printStackTrace();
-            return LoadStatus.FAILED;
         }
-        return LoadStatus.SUCCESS;
     }
 
     @Override

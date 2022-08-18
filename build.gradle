@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-    provided 'com.github.Minestom:Minestom:7867313290'
+    provided 'com.github.Minestom:Minestom:-SNAPSHOT'
     provided 'exposed.hydrogen.resources:Core:1.2.0'
     provided 'com.github.WorldSeedGames:WorldSeedEntityEngine:v2.0.0'
     implementation 'com.github.WorldSeedGames:WorldSeedEntityEngine:v2.0.0'

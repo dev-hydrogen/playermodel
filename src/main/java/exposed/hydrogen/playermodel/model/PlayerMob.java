@@ -45,7 +45,8 @@ public class PlayerMob extends LivingEntity {
 
         setBoundingBox(1, 4, 1);
         this.setInstance(instance, pos);
-        this.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(0.15f);
+
+        this.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(0.08f);
 
         // No way to set size without modifying minestom
         // PufferfishMeta meta = ((PufferfishMeta)this.getLivingEntityMeta());
@@ -58,8 +59,11 @@ public class PlayerMob extends LivingEntity {
         if (this.isDead) {
             return;
         }
-        this.model.setPosition(player.getPosition());
-        this.model.setGlobalRotation(-player.getPosition().yaw());
+
+        teleport(player.getPosition().sub(5, 0 ,0));
+
+        this.model.setPosition(this.getPosition());
+        this.model.setGlobalRotation(-player.getPosition().yaw() + 180);
     }
 
     @Override
