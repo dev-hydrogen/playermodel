@@ -1,5 +1,7 @@
 package exposed.hydrogen.playermodel.model;
 
+import lombok.Getter;
+import net.minestom.server.MinecraftServer;
 import net.minestom.server.attribute.Attribute;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Entity;
@@ -7,6 +9,7 @@ import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.LivingEntity;
 import net.minestom.server.entity.Player;
 import net.minestom.server.entity.metadata.other.ArmorStandMeta;
+import net.minestom.server.event.player.PlayerMoveEvent;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.network.packet.server.play.ParticlePacket;
 import net.minestom.server.particle.Particle;
@@ -18,7 +21,7 @@ import java.util.Set;
 
 public class PlayerMob extends LivingEntity {
     private final PlayerModel model;
-    private final AnimationHandler animationHandler;
+    @Getter private final AnimationHandler animationHandler;
     private final Player player;
 
     public PlayerMob(Instance instance, Pos pos, Player player) {
@@ -41,7 +44,7 @@ public class PlayerMob extends LivingEntity {
         model.init(instance, pos, this, nametag);
 
         this.animationHandler = new PlayerModelAnimationHandler(model);
-        animationHandler.playRepeat("animation.playermodel.walk");
+        animationHandler.playRepeat("animation.playermodel.idle");
 
         setBoundingBox(1, 4, 1);
         this.setInstance(instance, pos);
@@ -51,6 +54,14 @@ public class PlayerMob extends LivingEntity {
         // No way to set size without modifying minestom
         // PufferfishMeta meta = ((PufferfishMeta)this.getLivingEntityMeta());
         // meta.setSize(20);
+        MinecraftServer.getGlobalEventHandler().addListener(PlayerMoveEvent.class, event -> {
+            if (event.getPlayer().equals(this.player)) {
+                animationHandler.stopRepeat("animation.playermodel.idle");
+                animationHandler.playOnce("animation.playermodel.walk", cb -> {
+                    animationHandler.playRepeat("animation.playermodel.idle");
+                });
+            }
+        });
     }
 
     @Override

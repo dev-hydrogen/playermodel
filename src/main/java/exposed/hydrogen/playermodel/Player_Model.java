@@ -32,6 +32,7 @@ public final class Player_Model extends Extension {
     private static Path BASE_PATH;
     private static Path MODEL_PATH;
     private static Path TEMP_PATH;
+    @Getter private static PlayerMob currentMob;
     @Getter private static Player_Model instance;
 
     @Override
@@ -41,17 +42,23 @@ public final class Player_Model extends Extension {
         BASE_PATH = getInstance().getDataDirectory();
         MODEL_PATH = getInstance().getDataDirectory().resolve("models");
         TEMP_PATH = getInstance().getDataDirectory().resolve("temp");
+
         MinecraftServer.getGlobalEventHandler().addListener(PlayerSpawnEvent.class, event -> {
             Player player = event.getPlayer();
             PlayerMob mob = new PlayerMob(player.getInstance(), player.getPosition(), player);
             mob.spawn();
+            currentMob = mob;
         });
+
+        MinecraftServer.getCommandManager().register(new AnimationCommand());
+
         Gson gson = new Gson();
         InputStreamReader reader = new InputStreamReader(this.getClass().getResourceAsStream("/playermodel.bbmodel"));
         ModelGenerator.BBEntityModel playerModel = ModelGenerator.generate(
                 gson.fromJson(reader, JsonObject.class),
                 "playermodel"
         );
+
         try {
             FileUtils.writeStringToFile(new File(MODEL_PATH.resolve(playerModel.id()) + "/model.animation.json"), playerModel.animations().toString(), Charset.defaultCharset());
             FileUtils.writeStringToFile(new File(MODEL_PATH.resolve(playerModel.id()) + "/model.geo.json"), playerModel.geo().toString(), Charset.defaultCharset());
